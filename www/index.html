@@ -3,16 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
-    <title>Forge Buckets Tools</title>
+    <title>Buckets Tools</title>
     <link rel="stylesheet" href="/css/jstree.style.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <!--<link rel="stylesheet" href="https://developer-stg.api.autodesk.com/viewingservice/v1/viewers/style.css"-->
-    <!--type="text/css">-->
-
-    <!--
-    <script>window.$ = window.jQuery = require('./www/js/jquery.min.js');</script>
--->
-
 
     <!-- Insert this line above script imports  -->
     <script>if (typeof module === 'object') {window.module = module; module = undefined;} </script>
@@ -67,13 +60,13 @@
             </div>
         </div>
         <div class="row" style="background: white">
-            <div class="col-sm-3 forgeTreeContainer">
-                <div id="forgeFiles">
+            <div class="col-sm-3 apsTreeContainer">
+                <div id="apsFiles">
 
                 </div>
-                <div id="forgeCreateBucket" class="forgeControlContainer">
+                <div id="apsCreateBucket" class="apsControlContainer">
 
-                    <div id="forgeBucketName" >
+                    <div id="apsBucketName" >
                         <input id="bucketName"  style="display: inline-block;" class="input-small form-control" />
                         <select id="bucketType" style="display: inline-block; margin-top: 5px;" class="input-small form-control">
                             <option value="transient">transient</option>
@@ -85,16 +78,16 @@
                             <span class="glyphicon glyphicon-plus"></span>
                             &nbsp;Create bucket
                         </a>
-                        <input type="file" id="forgeUploadHidden" hidden />
+                        <input type="file" id="apsUploadHidden" hidden />
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4 forgeTreeContainer" style="position: relative">
-                <div id="forgeHierarchy" class="forgeControl"></div>
-                <div id="forgeFileOptions" class="forgeControlContainer" style="height:50px; overflow: hidden;">
+            <div class="col-sm-4 apsTreeContainer" style="position: relative">
+                <div id="apsHierarchy" class="apsControl"></div>
+                <div id="apsFileOptions" class="apsControlContainer" style="height:50px; overflow: hidden;">
 
                     <div style="display: inline-block">
-                        <select id="forgeFormats" class="input-small form-control" style="width:70px">
+                        <select id="apsFormats" class="input-small form-control" style="width:70px">
                         </select>
                      </div>
 
@@ -119,11 +112,11 @@
                         </a>
                     </div>
                 </div>
-                <div id="forgeProperties" class="forgeControl"></div>
+                <div id="apsProperties" class="apsControl"></div>
             </div>
 
-            <div class="col-sm-5 forgeViewer">
-                <div id="forgeViewer"></div>
+            <div class="col-sm-5 apsViewer">
+                <div id="apsViewer"></div>
             </div>
         </div>
     </div>
