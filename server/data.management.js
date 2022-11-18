@@ -19,7 +19,7 @@ var fs = require('fs');
 
 var config = require('./config');
 
-var forgeSDK = require('forge-apis');
+var apsSDK = require('forge-apis');
 
 var https = require('https');
 
@@ -29,7 +29,7 @@ router.post('/buckets', jsonParser, function (req, res) {
     var bucketName = req.body.bucketName
     var bucketType = req.body.bucketType
 
-    var buckets = new forgeSDK.BucketsApi();
+    var buckets = new apsSDK.BucketsApi();
     buckets.createBucket({
           "bucketKey": bucketName,
           "policyKey": bucketType
@@ -49,7 +49,7 @@ router.get('/files/:id', function (req, res) {
 
     var tokenSession = new token(req.session);
 
-    var objects = new forgeSDK.ObjectsApi();
+    var objects = new apsSDK.ObjectsApi();
     objects.getObject(boName.bucketKey, boName.objectName, {}, tokenSession.getOAuth(), tokenSession.getCredentials())
       .then(function (data) {
           res.set('content-type', 'application/octet-stream');
@@ -75,7 +75,7 @@ router.delete('/files/:id', function (req, res) {
     var id = req.params.id
     var boName = getBucketKeyObjectName(id)
 
-    var objects = new forgeSDK.ObjectsApi();
+    var objects = new apsSDK.ObjectsApi();
     objects.deleteObject(boName.bucketKey, boName.objectName, tokenSession.getOAuth(), tokenSession.getCredentials())
       .then(function (data) {
           res.json({ status: "success" })
@@ -91,7 +91,7 @@ router.get('/files/:id/publicurl', function (req, res) {
 
     var tokenSession = new token(req.session);
 
-    var objects = new forgeSDK.ObjectsApi();
+    var objects = new apsSDK.ObjectsApi();
     objects.createSignedResource(boName.bucketKey, boName.objectName, {}, { 'access': 'readwrite' }, tokenSession.getOAuth(), tokenSession.getCredentials())
       .then(function (data) {
           res.json(data.body);
@@ -106,7 +106,7 @@ router.delete('/buckets/:id', function (req, res) {
 
     var id = req.params.id
 
-    var buckets = new forgeSDK.BucketsApi();
+    var buckets = new apsSDK.BucketsApi();
     buckets.deleteBucket(id, tokenSession.getOAuth(), tokenSession.getCredentials())
       .then(function (data) {
           res.json({ status: "success" })
@@ -152,7 +152,7 @@ router.post('/files', jsonParser, function (req, res) {
             // Create file on A360
             fs.readFile(uploadedFile.path, function (err, fileData) {
                 // Upload the new file
-                var objects = new forgeSDK.ObjectsApi();
+                var objects = new apsSDK.ObjectsApi();
                 objects.uploadObject(bucketName, uploadedFile.name, uploadedFile.size, fileData, {}, tokenSession.getOAuth(), tokenSession.getCredentials())
                   .then(function (objectData) {
                       console.log('uploadObject: succeeded');
@@ -184,7 +184,7 @@ router.post('/chunks', rawParser, function (req, res) {
   console.log("chunks with range " + range);
 
   // Upload the new file
-  var objects = new forgeSDK.ObjectsApi();
+  var objects = new apsSDK.ObjectsApi();
   objects.uploadChunk(bucketName, fileName, data.length, range, sessionId, data, {}, tokenSession.getOAuth(), tokenSession.getCredentials())
     .then(function (objectData) {
       console.log(`uploadChunk with range ${range}: succeeded`);
@@ -369,7 +369,7 @@ router.get('/treeNode', function (req, res) {
         ]);
     }
     else if (regions.includes(id)) {
-        var buckets = new forgeSDK.BucketsApi();
+        var buckets = new apsSDK.BucketsApi();
         var items = [];
         var getBuckets = function (buckets, tokenSession, options, res, items) {
             buckets.getBuckets(options, tokenSession.getOAuth(), tokenSession.getCredentials())
@@ -394,7 +394,7 @@ router.get('/treeNode', function (req, res) {
         var options = { 'limit': 100, 'region': region };
         getBuckets(buckets, tokenSession, options, res, items);
     } else {
-        var objects = new forgeSDK.ObjectsApi();
+        var objects = new apsSDK.ObjectsApi();
 
         var items = [];
         var options = { 'limit': 100 };

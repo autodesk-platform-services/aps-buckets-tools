@@ -39,7 +39,7 @@ $(document).ready(function() {
         .done(function(data) {
           console.log("Response" + data);
           showProgress("Bucket created", "success");
-          $("#forgeFiles")
+          $("#apsFiles")
             .jstree(true)
             .refresh();
         })
@@ -245,12 +245,12 @@ $(document).ready(function() {
       } else {
         console.log("uploadChunks >> done");
         showProgress("File uploaded", "success");
-        $("#forgeFiles")
+        $("#apsFiles")
           .jstree(true)
           .refresh();
       }
 
-      $("#forgeUploadHidden").val("");
+      $("#apsUploadHidden").val("");
       MyVars.keepTrying = true;
     });
   }
@@ -410,7 +410,7 @@ $(document).ready(function() {
     }
   }
   
-  $("#forgeUploadHidden").change(function(evt) {
+  $("#apsUploadHidden").change(function(evt) {
     showProgress("Uploading file... ", "inprogress");
 
     let start = new Date().getTime();
@@ -426,13 +426,13 @@ $(document).ready(function() {
 
         case "failed":
           showProgress("Upload failed", "failed");
-          $("#forgeUploadHidden").val("");
+          $("#apsUploadHidden").val("");
           MyVars.keepTrying = true;
           break;
 
         case "cancelled":
           showProgress("Upload cancelled", "failed");
-          $("#forgeUploadHidden").val("");
+          $("#apsUploadHidden").val("");
           MyVars.keepTrying = true;
           break;
 
@@ -442,11 +442,11 @@ $(document).ready(function() {
           console.log(`${this.files[0].size} byte uploaded in ${diff} ms (parallel: ${MyVars.uploadInParallel})`)  
 
           showProgress("File uploaded", "success");
-          $("#forgeFiles")
+          $("#apsFiles")
             .jstree(true)
             .refresh();
 
-          $("#forgeUploadHidden").val("");
+          $("#apsUploadHidden").val("");
           MyVars.keepTrying = true;
           break;
       }
@@ -456,7 +456,7 @@ $(document).ready(function() {
 
   $("#uploadFile").click(function(evt) {
     evt.preventDefault();
-    $("#forgeUploadHidden").trigger("click");
+    $("#apsUploadHidden").trigger("click");
   });
 
   var auth = $("#authenticate");
@@ -903,7 +903,7 @@ function delManifest(urn, onsuccess) {
 }
 
 /////////////////////////////////////////////////////////////////
-// Formats / #forgeFormats
+// Formats / #apsFormats
 // Shows the export file formats available for the selected model
 /////////////////////////////////////////////////////////////////
 
@@ -929,19 +929,19 @@ function getFormats(onsuccess) {
 
 function fillFormats() {
   getFormats(function(data) {
-    var forgeFormats = $("#forgeFormats");
-    forgeFormats.data("forgeFormats", data);
+    var apsFormats = $("#apsFormats");
+    apsFormats.data("apsFormats", data);
 
     var download = $("#downloadExport");
     download.click(function() {
       MyVars.keepTrying = true;
 
-      var elem = $("#forgeHierarchy");
+      var elem = $("#apsHierarchy");
       var tree = elem.jstree();
       var rootNodeId = tree.get_node("#").children[0];
       var rootNode = tree.get_node(rootNodeId);
 
-      var format = $("#forgeFormats").val();
+      var format = $("#apsFormats").val();
       var urn = MyVars.selectedUrn;
       var guid = MyVars.selectedGuid;
       var fileName = rootNode.text + "." + format;
@@ -1030,17 +1030,17 @@ function fillFormats() {
 }
 
 function updateFormats(format) {
-  var forgeFormats = $("#forgeFormats");
-  var formats = forgeFormats.data("forgeFormats");
-  forgeFormats.empty();
+  var apsFormats = $("#apsFormats");
+  var formats = apsFormats.data("apsFormats");
+  apsFormats.empty();
 
   // obj is not listed for all possible files
   // using this workaround for the time being
-  //forgeFormats.append($("<option />").val('obj').text('obj'));
+  //apsFormats.append($("<option />").val('obj').text('obj'));
 
   $.each(formats.formats, function(key, value) {
     if (key === "obj" || value.indexOf(format) > -1) {
-      forgeFormats.append(
+      apsFormats.append(
         $("<option />")
           .val(key)
           .text(key)
@@ -1050,7 +1050,7 @@ function updateFormats(format) {
 }
 
 /////////////////////////////////////////////////////////////////
-// Files Tree / #forgeFiles
+// Files Tree / #apsFiles
 // Shows the A360 hubs, projects, folders and files of
 // the logged in user
 /////////////////////////////////////////////////////////////////
@@ -1076,13 +1076,13 @@ function getDerivativesRegion() {
 function prepareFilesTree() {
   console.log("prepareFilesTree");
 
-  let tree = $("#forgeFiles").jstree(true);
+  let tree = $("#apsFiles").jstree(true);
   if (tree) {
     tree.refresh();
     return;
   }
             
-  $("#forgeFiles")
+  $("#apsFiles")
     .jstree({
       core: {
         themes: { icons: true },
@@ -1127,10 +1127,10 @@ function prepareFilesTree() {
 
       // Just open the children of the node, so that it's easier
       // to find the actual versions
-      $("#forgeFiles").jstree("open_node", data.node);
+      $("#apsFiles").jstree("open_node", data.node);
 
       // Disable the hierarchy related controls for the time being
-      $("#forgeFormats").attr("disabled", "disabled");
+      $("#apsFormats").attr("disabled", "disabled");
       $("#downloadExport").attr("disabled", "disabled");
 
       MyVars.selectedNode = data.node;
@@ -1148,17 +1148,17 @@ function prepareFilesTree() {
         MyVars.keepTrying = true;
 
         // Clear hierarchy tree
-        $("#forgeHierarchy")
+        $("#apsHierarchy")
           .empty()
           .jstree("destroy");
 
         // Clear properties tree
-        $("#forgeProperties")
+        $("#apsProperties")
           .empty()
           .jstree("destroy");
 
         // Delete cached data
-        $("#forgeProperties").data("forgeProperties", null);
+        $("#apsProperties").data("apsProperties", null);
 
         MyVars.fileExtType = getFileType(data.node.text);
 
@@ -1193,14 +1193,14 @@ function prepareFilesTree() {
 
         // Just open the children of the node, so that it's easier
         // to find the actual versions
-        $("#forgeFiles").jstree("open_node", data.node);
+        $("#apsFiles").jstree("open_node", data.node);
 
         // And clear trees to avoid confusion thinking that the
         // data belongs to the clicked model
-        $("#forgeHierarchy")
+        $("#apsHierarchy")
           .empty()
           .jstree("destroy");
-        $("#forgeProperties")
+        $("#apsProperties")
           .empty()
           .jstree("destroy");
       }
@@ -1267,7 +1267,7 @@ function deleteFile(id) {
       .done(function(data) {
         console.log(data);
         if (data.status === "success") {
-          $("#forgeFiles")
+          $("#apsFiles")
             .jstree(true)
             .refresh();
           showProgress("File deleted", "success");
@@ -1289,7 +1289,7 @@ function deleteBucket(id) {
       .done(function(data) {
         console.log(data);
         if (data.status === "success") {
-          $("#forgeFiles")
+          $("#apsFiles")
             .jstree(true)
             .refresh();
           showProgress("Bucket deleted", "success");
@@ -1324,7 +1324,7 @@ function filesTreeContextMenu(node, callback) {
       refreshTree: {
         label: "Refresh",
         action: function() {
-          $("#forgeFiles")
+          $("#apsFiles")
             .jstree(true)
             .refresh();
         }
@@ -1338,7 +1338,7 @@ function filesTreeContextMenu(node, callback) {
       fileUpload: {
         label: "Upload file",
         action: function(obj) {
-          $("#forgeUploadHidden").trigger("click");
+          $("#apsUploadHidden").trigger("click");
         }
       }
     });
@@ -1369,7 +1369,7 @@ function filesTreeContextMenu(node, callback) {
 }
 
 /////////////////////////////////////////////////////////////////
-// Hierarchy Tree / #forgeHierarchy
+// Hierarchy Tree / #apsHierarchy
 // Shows the hierarchy of components in selected model
 /////////////////////////////////////////////////////////////////
 
@@ -1451,7 +1451,7 @@ function prepareHierarchyTree(urn, guid, json) {
   addHierarchy(json.objects);
 
   // Enable the hierarchy related controls
-  $("#forgeFormats").removeAttr("disabled");
+  $("#apsFormats").removeAttr("disabled");
   $("#downloadExport").removeAttr("disabled");
 
   // Store info of selected item
@@ -1459,7 +1459,7 @@ function prepareHierarchyTree(urn, guid, json) {
   MyVars.selectedGuid = guid;
 
   // init the tree
-  $("#forgeHierarchy")
+  $("#apsHierarchy")
     .jstree({
       core: {
         check_callback: true,
@@ -1492,7 +1492,7 @@ function prepareHierarchyTree(urn, guid, json) {
         var objectId = data.node.original.objectid;
 
         // Empty the property tree
-        $("#forgeProperties")
+        $("#apsProperties")
           .empty()
           .jstree("destroy");
 
@@ -1507,7 +1507,7 @@ function prepareHierarchyTree(urn, guid, json) {
       // caused by a viewer selection which is calling
       // selectInHierarchyTree()
       if (!MyVars.selectingInHierarchyTree) {
-        var elem = $("#forgeHierarchy");
+        var elem = $("#apsHierarchy");
         var nodeIds = elem.jstree("get_checked", null, true);
 
         // Convert from strings to numbers
@@ -1525,7 +1525,7 @@ function selectInHierarchyTree(objectIds) {
   MyVars.selectingInHierarchyTree = true;
 
   try {
-    var tree = $("#forgeHierarchy").jstree();
+    var tree = $("#apsHierarchy").jstree();
 
     // First remove all the selection
     tree.uncheck_all();
@@ -1551,7 +1551,7 @@ function hierarchyTreeContextMenu(node, callback) {
   var menuItem = {
     label: "Select in Fusion",
     action: function(obj) {
-      var path = $("#forgeHierarchy")
+      var path = $("#apsHierarchy")
         .jstree()
         .get_path(node, "/");
       console.log(path);
@@ -1573,7 +1573,7 @@ function hierarchyTreeContextMenu(node, callback) {
 }
 
 /////////////////////////////////////////////////////////////////
-// Property Tree / #forgeProperties
+// Property Tree / #apsProperties
 // Shows the properties of the selected sub-component
 /////////////////////////////////////////////////////////////////
 
@@ -1582,10 +1582,10 @@ function hierarchyTreeContextMenu(node, callback) {
 // hierarchy tree we can reuse it instead of sending out another
 // http request
 function fetchProperties(urn, guid, onsuccess) {
-  var props = $("#forgeProperties").data("forgeProperties");
+  var props = $("#apsProperties").data("apsProperties");
   if (!props) {
     getProperties(urn, guid, function(data) {
-      $("#forgeProperties").data("forgeProperties", data.data);
+      $("#apsProperties").data("apsProperties", data.data);
       onsuccess(data.data);
     });
   } else {
@@ -1632,7 +1632,7 @@ function preparePropertyTree(urn, guid, objectId, props) {
   addProperties(data, props.collection);
 
   // init the tree
-  $("#forgeProperties")
+  $("#apsProperties")
     .jstree({
       core: {
         check_callback: true,
@@ -1718,7 +1718,7 @@ function initializeViewer(urn) {
     if (MyVars.viewer) {
       loadDocument(MyVars.viewer, options.document);
     } else {
-      var viewerElement = document.getElementById("forgeViewer");
+      var viewerElement = document.getElementById("apsViewer");
       var config = {
         extensions: ['Autodesk.Viewing.MarkupsCore', 'Autodesk.Viewing.MarkupsGui'],
         //experimental: ['webVR_orbitModel']

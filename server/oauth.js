@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 // Copyright (c) Autodesk, Inc. All rights reserved
-// Written by Forge Partner Development
+// Written by Autodesk Partner Development
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -25,18 +25,17 @@ var token = require('./token');
 var express = require('express');
 var router = express.Router();
 
-var forgeSDK = require('forge-apis');
+var apsSDK = require('forge-apis');
 
 router.use(express.json());
 
 // this end point will logoff the user by destroying the session
-// as of now there is no Forge endpoint to invalidate tokens
+// as of now there is no endpoint to invalidate tokens
 router.get('/user/logoff', function (req, res) {
     req.session.destroy();
     res.end('/');
 });
 
-// wait for Autodesk callback (oAuth callback)
 router.post('/user/token', function (req, res) {
     var tokenSession = new token(req.session);
 
@@ -46,7 +45,7 @@ router.post('/user/token', function (req, res) {
       var scopes = req.body.scopes;
       scopes = scopes.split(' ')
 
-      var req = new forgeSDK.AuthClientTwoLegged(client_id, client_secret, scopes);
+      var req = new apsSDK.AuthClientTwoLegged(client_id, client_secret, scopes);
       req.authenticate()
           .then(function (credentials) {
 
