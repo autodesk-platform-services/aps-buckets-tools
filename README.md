@@ -14,7 +14,7 @@ This utility app lets you to see and create new buckets on **OSS**, upload and d
 
 ### Thumbnail
 
-![thumbnail](/readme/OssManager.png)
+![thumbnail](/thumbnail.png)
 
 ### Live version
 
