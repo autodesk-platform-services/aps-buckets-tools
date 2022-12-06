@@ -24,7 +24,7 @@ This utility app lets you to see and create new buckets on **OSS**, upload and d
 
 The first time you use this app with the **credentials** of a given **app**, it will generate all the neccessary **app bundles** and **activities**:
 
-![thumbnail](/readme/Setup.png)
+![setup](/readme/Setup.png)
 
 If **app bundles** and **activities** with the specific names already exist for the given **app** then they will not be overwritten with the correct ones. The best thing is to create a new **app** and use its **credentials** with this sample app.   
 
@@ -33,7 +33,7 @@ It also has a **Progress Info** field where information about the progress of th
 When you **right-click** a file then apart from being able to **delete** it or **download** it, you can also generate a **read/write** publicly accessible **URL** for it \
 This can come very handy when working with other services that require such **URLs** in order to provide **input/output** to them, like the **Design Automation Service** 
 
-![thumbnail](/readme/RightClick.png)
+![RightClick showcase](/readme/RightClick.png)
 
 2. **On the left** side you'll find all the **OSS** related functionality: listing all your **buckets** and **files**, creating new **buckets**, uploading/downloading **files** \
 When translating to the **OBJ** format then what will be included in that file depends on the object selection in the **Hieararchy Tree** (if no object is selected then the whole file will be translated) - all other translations will translate the whole file no matter which objects are selected 
