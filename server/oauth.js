@@ -45,7 +45,7 @@ router.post('/user/token', function (req, res) {
       var scopes = req.body.scopes;
       scopes = scopes.split(' ')
 
-      var req = new apsSDK.AuthClientTwoLegged(client_id, client_secret, scopes);
+      var req = new apsSDK.AuthClientTwoLeggedV2(client_id, client_secret, scopes);
       req.authenticate()
           .then(function (credentials) {
 
