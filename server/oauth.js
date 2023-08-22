@@ -31,12 +31,25 @@ router.use(express.json());
 
 // this end point will logoff the user by destroying the session
 // as of now there is no endpoint to invalidate tokens
-router.get('/user/logoff', function (req, res) {
+router.get('/logoff', function (req, res) {
     req.session.destroy();
     res.end('/');
 });
 
-router.post('/user/token', function (req, res) {
+router.get('/token', async function (req, res) {
+  try {
+    const tokenSession = new token(req.session);
+
+    const req = new apsSDK.AuthClientTwoLeggedV2(client_id, client_secret, ["viewables:read"]);
+    const credentials = await req.authenticate();
+
+    res.json({ token: credentials.access_token, expires_in: credentials.expires_in });
+  } catch (err) {
+    res.end(err);
+  }
+});
+
+router.post('/credentials', async function (req, res) {
     var tokenSession = new token(req.session);
 
     try {
@@ -46,19 +59,14 @@ router.post('/user/token', function (req, res) {
       scopes = scopes.split(' ')
 
       var req = new apsSDK.AuthClientTwoLeggedV2(client_id, client_secret, scopes);
-      req.authenticate()
-          .then(function (credentials) {
+      await req.authenticate();
 
-              tokenSession.setCredentials(credentials);
-              tokenSession.setOAuth(req);
-
-              console.log('Token: ' + credentials.access_token);
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.json({ token: credentials.access_token, expires_in: credentials.expires_in });
-          })
-          .catch(function (error) {
-            res.status(500).end(error.developerMessage);
-          });
+      tokenSession.setCredentials(req);
+      tokenSession.setScopes(scopes);
+      tokenSession.setClientID(client_id);
+      tokenSession.setClientSecret(client_secret);
+          
+      res.end();
     } catch (err) {
         res.status(500).end(err);
     }

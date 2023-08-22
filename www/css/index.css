@@ -7,6 +7,18 @@
     margin-top: 20px;
 }
 
+.navbar-header {
+ display: flex;
+}
+
+form {
+  width: 100%;
+}
+
+.ml-3 {
+  margin-left: 1rem;
+}
+
 .apsViewer {
     border:1px solid silver; padding: 0;
     height:500px; vertical-align: middle;

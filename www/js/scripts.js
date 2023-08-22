@@ -66,7 +66,7 @@ $(document).ready(function() {
       });
     });
   }
-
+/*
   function uploadChunk(fileName, folderId, sessionId, range, readerResult) {
     return new Promise((resolve, reject) => {
       console.log(
@@ -254,6 +254,7 @@ $(document).ready(function() {
       MyVars.keepTrying = true;
     });
   }
+  */
 
   async function uploadChunksAsync(file, options, callback) {
     const RETRY_MAX = 3;

@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
     <title>Buckets Tools</title>
     <link rel="stylesheet" href="/css/jstree.style.min.css"/>
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <!--type="text/css">-->
     <script language="JavaScript" src="/js/jquery.min.js"></script>
     <script language="JavaScript" src="/js/jquery.storageapi.min.js"></script>
     <script src="/js/jstree.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
+    
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 
     <!-- for the viewer -->
     <script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/viewer3D.js"></script>
@@ -20,30 +22,27 @@
     <script language="JavaScript" src="/js/scripts.js"></script>
 </head>
 <body>
+  <header>
+    <nav class="navbar navbar-default bg-dark" role="navigation">
+      <div class="container-fluid">
+        <form action="/oauth/user/token">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+              <img alt="Autodesk" src="/img/aps-white.png" height="30px">
+            </a>
+            <span class="text-light fs-3">Buckets&nbsp;Tools</span>
+            <input id="client_id" name="client_id" placeholder="Client ID" class="input-small form-control ml-3" />
+            <input id="client_secret" name="client_secret" type="password" placeholder="Client Secret" class="input-small form-control ml-3" />
+            <input id="scopes" name="scopes" class="input-small form-control ml-3" value="data:read data:write data:create bucket:read bucket:delete bucket:update bucket:create" hidden />
+            <input type="submit" id="authenticate" class="btn btn-warning btn-block ml-3" value="Log In" />
+          </div>
+        </form>
+      </div>
+    </nav>
+  
+  </header>
 <div class="container">
     <div class="jumbotron">
-        <h3>Buckets Tools</h3>
-
-        <div class="row">
-            <div class="col-sm-4">
-                <input id="client_id" name="username" placeholder="Client ID" style="display: inline-block;" class="input-small form-control" />
-            </div>
-            <div class="col-sm-2">
-                <input id="client_secret" name="password" type="password" placeholder="Client Secret" style="display: inline-block;" class="input-small form-control" />
-            </div>
-            <div class="col-sm-4" style="display: none;">
-                <input id="scopes" style="display: inline-block;" class="input-small form-control" value="data:read data:write data:create bucket:read bucket:delete bucket:update bucket:create" />
-            </div>
-            <div class="col-sm-2">
-                <a href="#" id="authenticate" class="btn btn-warning btn-block">
-                    <span class="glyphicon glyphicon-user"></span>
-                    Log In
-                </a>
-            </div>
-        </div>
-        
-        <br />
-        For a list of all the possible scopes that you can allow this app have a look at <a src="https://developer.autodesk.com/en/docs/oauth/v2/overview/scopes/">https://developer.autodesk.com/en/docs/oauth/v2/overview/scopes/</a>
         <div class="row">
             <div class="col-sm-3" style="height:40px">
                 <div id="progressInfo" class="btn btn-info" style="font-size: 10pt ">
