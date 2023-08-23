@@ -5,7 +5,7 @@
 ![Platforms](https://img.shields.io/badge/platform-windows%20%7C%20osx%20%7C%20linux-lightgray.svg)
 [![License](https://img.shields.io/:license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 
-[![OAuth2](https://img.shields.io/badge/OAuth2-v1-green.svg)](https://aps.autodesk.com/)
+[![OAuth2](https://img.shields.io/badge/OAuth2-v2-green.svg)](https://aps.autodesk.com/)
 [![Design Automation](https://img.shields.io/badge/Model%20Derivative-v2-green.svg)](https://aps.autodesk.com/)
 
 **OSS** stands for **Object Storage Service** which enables you to store your files on **APS** and do further processing on them using other services like the **Model Derivative Service**
