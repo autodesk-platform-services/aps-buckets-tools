@@ -32,5 +32,6 @@ module.exports = {
         'bucket:create', 'bucket:read', 'bucket:update', 'bucket:delete'
     ],
     // Required scope of the token sent to the client
-    scopePublic: ['viewables:read']
+    scopePublic: ['viewables:read'],
+    sessionSecret: process.env.SERVER_SESSION_SECRET || '<replace with random string>'
 };

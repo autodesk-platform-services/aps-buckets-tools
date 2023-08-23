@@ -1,16 +1,11 @@
 'use strict'; // http://www.w3schools.com/js/js_strict.asp
 
-// token handling in session
-var token = require('./token');
-
 // web framework
 var express = require('express');
 var router = express.Router();
 
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
-
-var zlib = require("zlib");
 
 var apsSDK = require('forge-apis');
 
@@ -21,9 +16,7 @@ var apsSDK = require('forge-apis');
 router.get('/formats', function (req, res) {
     var derivatives = new apsSDK.DerivativesApi();
 
-    var tokenSession = new token(req.session);
-
-    derivatives.getFormats({}, tokenSession.getOAuth(), tokenSession.getCredentials())
+    derivatives.getFormats({}, null, req.session)
         .then(function (formats) {
             res.json(formats.body);
         })
@@ -44,9 +37,9 @@ router.get('/manifests/:urn', function (req, res) {
     // ask for it using the US endpoint 
     var region = req.query.region;
 
-    var tokenSession = new token(req.session);
+    
 
-    derivatives.getManifest(req.params.urn, {}, tokenSession.getOAuth(), tokenSession.getCredentials())
+    derivatives.getManifest(req.params.urn, {}, null, req.session)
         .then(function (data) {
             res.json(data.body);
         })
@@ -56,11 +49,11 @@ router.get('/manifests/:urn', function (req, res) {
 });
 
 router.delete('/manifests/:urn', function (req, res) {
-    var tokenSession = new token(req.session);
+    
 
     var derivatives = new apsSDK.DerivativesApi();
     try {
-        derivatives.deleteManifest(req.params.urn, tokenSession.getOAuth(), tokenSession.getCredentials())
+        derivatives.deleteManifest(req.params.urn, null, req.session)
             .then(function (data) {
                 res.json(data.body);
             })
@@ -80,9 +73,9 @@ router.delete('/manifests/:urn', function (req, res) {
 router.get('/metadatas/:urn', function (req, res) {
     var derivatives = new apsSDK.DerivativesApi();
 
-    var tokenSession = new token(req.session);
+    
 
-    derivatives.getMetadata(req.params.urn, {}, tokenSession.getOAuth(), tokenSession.getCredentials())
+    derivatives.getMetadata(req.params.urn, {}, null, req.session)
         .then(function (data) {
             res.json(data.body);
         })
@@ -98,9 +91,7 @@ router.get('/metadatas/:urn', function (req, res) {
 router.get('/hierarchy', function (req, res) {
     var derivatives = new apsSDK.DerivativesApi();
 
-    var tokenSession = new token(req.session);
-
-    derivatives.getModelviewMetadata(req.query.urn, req.query.guid, {}, tokenSession.getOAuth(), tokenSession.getCredentials())
+    derivatives.getModelviewMetadata(req.query.urn, req.query.guid, {}, null, req.session)
         .then(function (metaData) {
             if (metaData.body.data) {
                 res.json(metaData.body);
@@ -120,9 +111,7 @@ router.get('/hierarchy', function (req, res) {
 router.get('/properties', function (req, res) {
     var derivatives = new apsSDK.DerivativesApi();
 
-    var tokenSession = new token(req.session);
-
-    derivatives.getModelviewProperties(req.query.urn, req.query.guid, {}, tokenSession.getOAuth(), tokenSession.getCredentials())
+    derivatives.getModelviewProperties(req.query.urn, req.query.guid, {}, null, req.session)
         .then(function (data) {
             res.json(data.body);
         })
@@ -138,9 +127,7 @@ router.get('/properties', function (req, res) {
 router.get('/download', function (req, res) {
     var derivatives = new apsSDK.DerivativesApi();
 
-    var tokenSession = new token(req.session);
-
-    derivatives.getDerivativeManifest(req.query.urn, req.query.derUrn, {}, tokenSession.getOAuth(), tokenSession.getCredentials())
+    derivatives.getDerivativeManifest(req.query.urn, req.query.derUrn, {}, null, req.session)
         .then(function (data) {
             var fileParts = req.query.fileName.split('.')
             var fileExt = fileParts[fileParts.length - 1];
@@ -190,12 +177,10 @@ router.post('/export', jsonParser, function (req, res) {
 
     var derivatives = new apsSDK.DerivativesApi();
 
-    var tokenSession = new token(req.session);
-
     if (!derivatives)
         return;
 
-    derivatives.translate({"input": input, "output": output}, {}, tokenSession.getOAuth(), tokenSession.getCredentials())
+    derivatives.translate({"input": input, "output": output}, {}, null, req.session)
         .then(function (data) {
             res.json(data.body);
         })

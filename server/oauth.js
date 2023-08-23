@@ -18,9 +18,6 @@
 
 'use strict'; // http://www.w3schools.com/js/js_strict.asp
 
-// token handling in session
-var token = require('./token');
-
 // web framework
 var express = require('express');
 var router = express.Router();
@@ -37,7 +34,6 @@ router.get('/user/logoff', function (req, res) {
 });
 
 router.post('/user/token', function (req, res) {
-    var tokenSession = new token(req.session);
 
     try {
       var client_id = req.body.client_id;
@@ -45,12 +41,11 @@ router.post('/user/token', function (req, res) {
       var scopes = req.body.scopes;
       scopes = scopes.split(' ')
 
-      var req = new apsSDK.AuthClientTwoLeggedV2(client_id, client_secret, scopes);
-      req.authenticate()
+      var req2 = new apsSDK.AuthClientTwoLeggedV2(client_id, client_secret, scopes);
+      req2.authenticate()
           .then(function (credentials) {
 
-              tokenSession.setCredentials(credentials);
-              tokenSession.setOAuth(req);
+              req.session.access_token = credentials.access_token;
 
               console.log('Token: ' + credentials.access_token);
             res.setHeader('Access-Control-Allow-Origin', '*');
