@@ -1720,7 +1720,7 @@ function initializeViewer(urn) {
     } else {
       var viewerElement = document.getElementById("apsViewer");
       var config = {
-        extensions: ['Autodesk.Viewing.MarkupsCore', 'Autodesk.Viewing.MarkupsGui'],
+        extensions: ['Autodesk.Viewing.MarkupsCore', 'Autodesk.Viewing.MarkupsGui', 'Autodesk.DocumentBrowser'],
         //experimental: ['webVR_orbitModel']
         //environment: "AutodeskStaging"
       };
