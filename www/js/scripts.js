@@ -1762,16 +1762,9 @@ function loadDocument(viewer, documentId) {
     documentId,
     // onLoad
     function(doc) {
-      var geometryItems = doc
-        .getRoot()
-        .search({ role: "2d", type: "geometry" });
+      const defGeometry = doc.getRoot().getDefaultGeometry();
 
-      // Try 3d geometry first
-      if (geometryItems.length < 1) {
-        geometryItems.push(doc.getRoot().getDefaultGeometry());
-      }
-
-      viewer.loadDocumentNode(doc, geometryItems[0]).then(i => {
+      viewer.loadDocumentNode(doc, defGeometry).then(i => {
         // documented loaded, any action?
       });
     },
