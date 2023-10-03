@@ -21,7 +21,7 @@ router.get('/formats', function (req, res) {
             res.json(formats.body);
         })
         .catch(function (error) {
-            res.status(error.statusCode).end(error.statusMessage);
+            res.status(error?.response?.status || 500).end(error?.message || "Failed");
         });
 });
 
@@ -44,7 +44,7 @@ router.get('/manifests/:urn', function (req, res) {
             res.json(data.body);
         })
         .catch(function (error) {
-            res.status(error.statusCode).end(error.statusMessage);
+            res.status(error?.response?.status || 500).end(error?.message || "Failed");
         });
 });
 
@@ -58,7 +58,7 @@ router.delete('/manifests/:urn', function (req, res) {
                 res.json(data.body);
             })
             .catch(function (error) {
-                res.status(error.statusCode).end(error.statusMessage);
+                res.status(error?.response?.status || 500).end(error?.message || "Failed");
             });
 
     } catch (err) {
@@ -80,7 +80,7 @@ router.get('/metadatas/:urn', function (req, res) {
             res.json(data.body);
         })
         .catch(function (error) {
-            res.status(error.statusCode).end(error.statusMessage);
+            res.status(error?.response?.status || 500).end(error?.message || "Failed");
         });
 });
 
@@ -100,7 +100,7 @@ router.get('/hierarchy', function (req, res) {
             }
         })
         .catch(function (error) {
-            res.status(error.statusCode).end(error.statusMessage);
+            res.status(error.response.status || 500).end(error?.message || "Failed");
         });
 });
 
@@ -116,7 +116,7 @@ router.get('/properties', function (req, res) {
             res.json(data.body);
         })
         .catch(function (error) {
-            res.status(error.statusCode).end(error.statusMessage);
+            res.status(error?.response?.status || 500).end(error?.message || "Failed");
         });
 });
 
@@ -136,7 +136,7 @@ router.get('/download', function (req, res) {
             res.end(data.body);
         })
         .catch(function (error) {
-            res.status(error.statusCode).end(error.statusMessage);
+            res.status(error?.response?.status || 500).end(error?.message || "Failed");
         });
 });
 
@@ -185,7 +185,7 @@ router.post('/export', jsonParser, function (req, res) {
             res.json(data.body);
         })
         .catch(function (error) {
-            res.status(error.statusCode).end(error.statusMessage);
+            res.status(error?.response?.status || 500).end(error?.message || "Failed");
         });
 });
 

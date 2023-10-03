@@ -741,7 +741,7 @@ function askForFileType(
         }
       })
       .fail(function(err) {
-        showProgress(err.responseText, "failed");
+        showProgress("Translation failed", "failed");
         console.log("/md/export call failed\n" + err.statusText);
       })
   );
