@@ -1281,6 +1281,10 @@ function deleteFile(id) {
 
 function deleteBucket(id) {
   console.log("Delete bucket = " + id);
+
+  if (!confirm(`Are you sure you want to delete bucket "${id}"?`))
+    return;
+
   MyVars.ajaxCalls.push(
     $.ajax({
       url: "/dm/buckets/" + encodeURIComponent(id),
