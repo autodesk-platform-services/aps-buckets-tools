@@ -1259,6 +1259,11 @@ function downloadFileNew(id) {
 
 function deleteFile(id) {
   console.log("Delete file = " + id);
+
+  const fileName = id.split("/").pop();
+  if (!confirm(`Are you sure you want to delete file "${fileName}"?`))
+    return;
+
   MyVars.ajaxCalls.push(
     $.ajax({
       url: "/dm/files/" + encodeURIComponent(id),
