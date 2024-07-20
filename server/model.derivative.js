@@ -37,7 +37,7 @@ router.get('/manifests/:urn', function (req, res) {
     // ask for it using the US endpoint 
     var region = req.query.region;
 
-    
+
 
     derivatives.getManifest(req.params.urn, {}, null, req.session)
         .then(function (data) {
@@ -49,7 +49,7 @@ router.get('/manifests/:urn', function (req, res) {
 });
 
 router.delete('/manifests/:urn', function (req, res) {
-    
+
 
     var derivatives = new apsSDK.DerivativesApi();
     try {
@@ -73,7 +73,7 @@ router.delete('/manifests/:urn', function (req, res) {
 router.get('/metadatas/:urn', function (req, res) {
     var derivatives = new apsSDK.DerivativesApi();
 
-    
+
 
     derivatives.getMetadata(req.params.urn, {}, null, req.session)
         .then(function (data) {
@@ -96,7 +96,7 @@ router.get('/hierarchy', function (req, res) {
             if (metaData.body.data) {
                 res.json(metaData.body);
             } else {
-                res.json({result: 'accepted'});
+                res.json({ result: 'accepted' });
             }
         })
         .catch(function (error) {
@@ -144,43 +144,68 @@ router.get('/download', function (req, res) {
 // Send a translation request in order to get an SVF or other
 // file format for our file
 /////////////////////////////////////////////////////////////////
-router.post('/export', jsonParser, function (req, res) {
-    //env, token, urn, format, rootFileName, fileExtType, advanced
-    var item = {
-        "type": req.body.format
-    };
 
-    if (req.body.format.startsWith('svf')) {
+router.post('/export', jsonParser, function (req, res) {
+    //env, token, urn, format, rootFileName, fileExtType, advanced   
+    const { format, urn, region, fileExtType, rootFileName, advanced } = req.body;
+
+    // Initialize the item with format type
+    let item = { type: format };
+
+    // Add views for SVF format
+    if (format.startsWith('svf')) {
         item.views = ['2d', '3d'];
     }
 
-    if (req.body.advanced) {
-        item.advanced = req.body.advanced;
+    // Add advanced options if present
+    if (advanced) {
+        item.advanced = advanced;
     }
 
-    if (req.body.fileExtType === 'ifc') {
-      item.advanced = item.advanced || {};
-      item.advanced.conversionMethod = "modern";
+    // Modify advanced options based on file extension type
+    // 20.07.2024 - Updated advanced options will be used in the translation job for DWG, DXF, RVT for 2D views to be generated as PDFs.
+    //ref:https://aps.autodesk.com/blog/advanced-option-rvtdwg-2d-views-svf2-post-job
+    switch (fileExtType) {
+        case 'ifc':
+            item.advanced = { ...item.advanced, conversionMethod: 'modern' };
+            break;
+        case 'dwg':
+        case 'dxf':
+        case 'rvt':
+            item.advanced = { "2dviews": "pdf" };
+            break;
+        case 'zip':
+            if (rootFileName.endsWith('.dwg')
+                || rootFileName.endsWith('.dxf')
+                || rootFileName.endsWith('.rvt')) {
+                item.advanced = { "2dviews": "pdf" };
+            }
+            break;
+        // Add more cases as needed here
+        default:
+            break;
     }
 
-    var input = (req.body.fileExtType && req.body.fileExtType === 'zip' ? {
-        "urn": req.body.urn,
-        "rootFilename": req.body.rootFileName,
-        "compressedUrn": true
-    } : {"urn": req.body.urn});
-    var output = {
-        "destination": {
-            "region": req.body.region
-        },
-        "formats": [item]
+    // Define input based on file extension type
+    const input = fileExtType === 'zip'
+        ? { urn, rootFilename: rootFileName, compressedUrn: true }
+        : { urn };
+
+    // Define output with destination region and formats
+    const output = {
+        destination: { region },
+        formats: [item]
     };
 
-    var derivatives = new apsSDK.DerivativesApi();
+    // Initialize the derivatives API
+    const derivatives = new apsSDK.DerivativesApi();
 
-    if (!derivatives)
-        return;
+    if (!derivatives) {
+        throw new Error('Failed to initialize Derivatives API');
+    }
 
-    derivatives.translate({"input": input, "output": output}, {}, null, req.session)
+
+    derivatives.translate({ "input": input, "output": output }, {}, null, req.session)
         .then(function (data) {
             res.json(data.body);
         })
@@ -188,6 +213,8 @@ router.post('/export', jsonParser, function (req, res) {
             res.status(error?.response?.status || 500).end(error?.message || "Failed");
         });
 });
+
+
 
 /////////////////////////////////////////////////////////////////
 // Return the router object that contains the endpoints
