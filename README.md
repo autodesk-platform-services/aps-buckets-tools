@@ -10,7 +10,7 @@
 
 **OSS** stands for **Object Storage Service** which enables you to store your files on **APS** and do further processing on them using other services like the **Model Derivative Service**
 
-This utility app lets you to see and create new buckets on **OSS**, upload and download files, convert them to other formats, view them online and quesry meta data from them 
+This utility app lets you to see and create new buckets on **OSS**, upload and download files, convert them to other formats, view them online and quesry meta data from them
 
 ### Thumbnail
 
