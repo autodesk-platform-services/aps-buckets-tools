@@ -37,32 +37,6 @@ router.post('/buckets', jsonParser, function (req, res) {
 
 })
 
-router.get('/files/:id', function (req, res) {
-    var id = req.params.id
-    var boName = getBucketKeyObjectName(id)
-
-    
-
-    var objects = new apsSDK.ObjectsApi();
-    objects.getObject(boName.bucketKey, boName.objectName, {}, null, req.session)
-      .then(function (data) {
-          res.set('content-type', 'application/octet-stream');
-          res.set('Content-Disposition', 'attachment; filename="' + boName.objectName + '"');
-          if (Buffer.isBuffer(data.body)) {
-            res.end(data.body);
-          } else if (typeof(data.body) === 'string') {
-            res.end(Buffer.from(data.body));
-          } else if (typeof(data.body) === 'object') {
-            res.end(Buffer.from(JSON.stringify(data.body)));
-          } else {
-            throw "Give up"
-          }
-      })
-      .catch(function (error) {
-          res.status(error.statusCode || 500).end(error.statusMessage || "Server error");
-      });
-})
-
 router.delete('/files/:id', function (req, res) {
     var id = req.params.id
     var boName = getBucketKeyObjectName(id)
@@ -80,8 +54,6 @@ router.delete('/files/:id', function (req, res) {
 router.get('/files/:id/publicurl', function (req, res) {
     var id = req.params.id
     var boName = getBucketKeyObjectName(id)
-
-    
 
     var objects = new apsSDK.ObjectsApi();
     objects.createSignedResource(boName.bucketKey, boName.objectName, {}, 

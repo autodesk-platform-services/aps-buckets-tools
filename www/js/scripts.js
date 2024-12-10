@@ -1002,19 +1002,6 @@ function prepareFilesTree() {
     });
 }
 
-function downloadFile(id) {
-  console.log("Download file = " + id);
-  // fileName = file name you want to use for download
-  var url =
-    window.location.protocol +
-    "//" +
-    window.location.host +
-    "/dm/files/" +
-    encodeURIComponent(id);
-
-  window.open(url, "_blank");
-}
-
 function getBucketKeyObjectName(objectId) {
   // the objectId comes in the form of
   // urn:adsk.objects:os.object:BUCKET_KEY/OBJECT_NAME
@@ -1048,7 +1035,7 @@ function downloadFileNew(id) {
       }
     })
     .fail(function(err) {
-      console.log("GET /dm/files/ call failed\n" + err.statusText);
+      console.log("GET /dm/downloadurl call failed\n" + err.statusText);
     })
 }
 
