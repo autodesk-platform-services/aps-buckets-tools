@@ -32,7 +32,7 @@ router.post('/buckets', jsonParser, function (req, res) {
             res.json(data.body)
       })
       .catch(function (error) {
-          res.status(error.statusCode).end(error.statusMessage);
+          res.status(error.statusCode || 500).end(error.statusMessage);
       })
 
 })
@@ -73,7 +73,7 @@ router.delete('/files/:id', function (req, res) {
           res.json({ status: "success" })
       })
       .catch(function (error) {
-          res.status(error.statusCode).end(error.statusMessage);
+          res.status(error.statusCode || 500).end(error.statusMessage);
       })
 })
 
@@ -92,7 +92,7 @@ router.get('/files/:id/publicurl', function (req, res) {
           res.json(data.body);
       })
       .catch(function (error) {
-          res.status(error.statusCode).end(error.statusMessage);
+          res.status(error.statusCode || 500).end(error.statusMessage);
       });
 })
 
@@ -105,7 +105,7 @@ router.delete('/buckets/:id', function (req, res) {
           res.json({ status: "success" })
       })
       .catch(function (error) {
-          res.status(error.statusCode).end(error.statusMessage);
+          res.status(error.statusCode || 500).end(error.statusMessage);
       })
 })
 
@@ -283,7 +283,7 @@ router.get('/treeNode', function (req, res) {
             })
             .catch(function (error) {
                 console.log(error);
-                res.status(error.statusCode).end(error.statusMessage);
+                res.status(error.statusCode || 500).end(error.statusMessage);
             });
         }
 
@@ -310,7 +310,7 @@ router.get('/treeNode', function (req, res) {
             })
             .catch(function (error) {
                 console.log(error);
-                res.status(error.statusCode).end(error.statusMessage);
+                res.status(error.statusCode || 500).end(error.statusMessage);
             });
         }
 
