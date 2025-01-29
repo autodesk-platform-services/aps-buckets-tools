@@ -172,7 +172,7 @@ router.post('/export', jsonParser, function (req, res) {
         case 'dwg':
         case 'dxf':
         case 'rvt':
-            item.advanced = { "2dviews": "pdf" };
+            item.advanced = { ...item.advanced, "2dviews": "pdf" };
             break;
         case 'zip':
             if (rootFileName.endsWith('.dwg')
