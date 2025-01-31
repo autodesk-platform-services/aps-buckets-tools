@@ -17,6 +17,12 @@ $(document).ready(function() {
   }
 
   MyVars.noHierarchy = (url.searchParams.get("nohierarchy") != null);
+  MyVars.advanced = {};
+  if (url.searchParams.get("advanced.conversionMethod"))
+  	MyVars.advanced.conversionMethod = url.searchParams.get("advanced.conversionMethod");
+  if (url.searchParams.get("advanced.exportSettingName"))
+  	MyVars.advanced.exportSettingName = url.searchParams.get("advanced.exportSettingName");
+
   MyVars.useSvf2 = (url.searchParams.get("usesvf2") != null);
   MyVars.uploadInParallel = (url.searchParams.get("uploadinparallel") != null);
 
@@ -506,6 +512,8 @@ function askForFileType(
       objectIds: objectIds
     }
   };
+  let advanced = advancedOptions[format];
+  advanced = { ...advanced, ...MyVars.advanced };
 
   MyVars.ajaxCalls.push(
     $.ajax({
@@ -516,7 +524,7 @@ function askForFileType(
       data: JSON.stringify({
         urn: urn,
         format: format,
-        advanced: advancedOptions[format],
+        advanced: advanced,
         rootFileName: rootFileName,
         fileExtType: fileExtType,
         region: getDerivativesRegion()

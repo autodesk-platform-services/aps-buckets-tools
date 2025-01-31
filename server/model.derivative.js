@@ -168,11 +168,13 @@ router.post('/export', jsonParser, function (req, res) {
     switch (fileExtType) {
         case 'ifc':
             item.advanced = { ...item.advanced, conversionMethod: 'modern' };
+			item.advanced.conversionMethod = advanced?.conversionMethod || 'modern';
             break;
         case 'dwg':
         case 'dxf':
         case 'rvt':
             item.advanced = { ...item.advanced, "2dviews": "pdf" };
+			item.advanced["2dviews"] = advanced?.["2dviews"] || "pdf";
             break;
         case 'zip':
             if (rootFileName.endsWith('.dwg')
