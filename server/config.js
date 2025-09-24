@@ -33,5 +33,6 @@ module.exports = {
     ],
     // Required scope of the token sent to the client
     scopePublic: ['viewables:read'],
-    sessionSecret: process.env.SERVER_SESSION_SECRET || '<replace with random string>'
+    sessionSecret: process.env.SERVER_SESSION_SECRET || '<replace with random string>',
+    regions: process.env.APS_REGIONS ? process.env.APS_REGIONS.split(',') : null
 };

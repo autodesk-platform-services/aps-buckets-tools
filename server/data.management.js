@@ -3,6 +3,7 @@
 // web framework
 var express = require('express');
 var router = express.Router();
+var config = require('./config.js');
 
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
@@ -224,17 +225,15 @@ function getBucketKeyObjectName(objectId) {
 // our A360 account
 /////////////////////////////////////////////////////////////////
 router.get('/treeNode', function (req, res) {
-    var regions = ["EMEA", "US"];
+    var regions = config.regions;
     var region = req.query.region;
     var id = decodeURIComponent(req.query.id);
     console.log("treeNode for " + id);
 
     if (id === '#') {
         // # stands for ROOT
-        res.json([
-            { id: "US", text: "US", type: "region", children: true },
-            { id: "EMEA", text: "EMEA", type: "region", children: true }
-        ]);
+        let data = regions.map(region => ({ id: region, text: region, type: "region", children: true }));
+        res.json(data);
     }
     else if (regions.includes(id)) {
         var buckets = new apsSDK.BucketsApi();

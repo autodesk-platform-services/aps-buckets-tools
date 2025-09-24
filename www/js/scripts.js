@@ -279,6 +279,8 @@ $(document).ready(function() {
         // Fill the tree with A360 items
         prepareFilesTree();
 
+        prepareRegionDropdown();
+
         // Download list of available file formats
         fillFormats();
       },
@@ -298,6 +300,18 @@ $(document).ready(function() {
     MyVars.ajaxCalls = [];
   });
 });
+
+async function prepareRegionDropdown() {
+  let res = await fetch("/dm/treeNode?id=%23");
+  let data = await res.json();
+
+  let select = $("#derivativesRegion");
+  select.empty();
+
+  data.forEach(region => {
+    select.append($("<option>").val(region.id).text(region.text));
+  });
+}
 
 function base64encode(str) {
   var ret = "";
@@ -422,7 +436,9 @@ function downloadDerivative(urn, derUrn, fileName) {
     "&derUrn=" +
     derUrn +
     "&fileName=" +
-    encodeURIComponent(fileName);
+    encodeURIComponent(fileName) +
+    "&region=" +
+    getDerivativesRegion();
 
   window.open(url, "_blank");
 }
@@ -555,7 +571,7 @@ function getMetadata(urn, onsuccess, onerror) {
   console.log("getMetadata for urn=" + urn);
   MyVars.ajaxCalls.push(
     $.ajax({
-      url: "/md/metadatas/" + urn,
+      url: "/md/metadatas/" + urn + "?region=" + getDerivativesRegion(),
       type: "GET"
     })
       .done(function(data) {
@@ -587,7 +603,7 @@ function getHierarchy(urn, guid, onsuccess) {
   console.log("getHierarchy for urn=" + urn + " and guid=" + guid);
   MyVars.ajaxCalls.push(
     $.ajax({
-      url: "/md/hierarchy",
+      url: "/md/hierarchy" + "?region=" + getDerivativesRegion(),
       type: "GET",
       data: { urn: urn, guid: guid }
     })
@@ -623,7 +639,7 @@ function getProperties(urn, guid, onsuccess) {
   console.log("getProperties for urn=" + urn + " and guid=" + guid);
   MyVars.ajaxCalls.push(
     $.ajax({
-      url: "/md/properties",
+      url: "/md/properties" + "?region=" + getDerivativesRegion(),
       type: "GET",
       data: { urn: urn, guid: guid }
     })
@@ -687,7 +703,7 @@ function delManifest(urn, onsuccess) {
   console.log("delManifest for urn=" + urn);
   MyVars.ajaxCalls.push(
     $.ajax({
-      url: "/md/manifests/" + urn,
+      url: "/md/manifests/" + urn + "?region=" + getDerivativesRegion(),
       type: "DELETE"
     })
       .done(function(data) {
@@ -1498,13 +1514,15 @@ function setAecProfile(viewer) {
 function initializeViewer(urn) {
   cleanupViewer();
 
+  Autodesk.Viewing.FeatureFlags.set('DS_ENDPOINTS', true);
+
   console.log("Launching Autodesk Viewer for: " + urn);
 
   get2LegToken((token, expiry) => {
     var options = {
       document: "urn:" + urn,
       env: "AutodeskProduction2", //'AutodeskStaging', //'AutodeskProduction',
-      api: "streamingV2" + (getDerivativesRegion() === "EMEA" ? "_EU" : ""),
+      api: "streamingV2", // + (getDerivativesRegion() === "EMEA" ? "_EU" : ""),
       accessToken: token
       //getAccessToken: get2LegToken
       //useConsolidation: false,

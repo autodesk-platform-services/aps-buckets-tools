@@ -9,6 +9,20 @@ var jsonParser = bodyParser.json();
 
 var apsSDK = require('forge-apis');
 
+var sdk = require('@aps_sdk/autodesk-sdkmanager');
+var derivativeSdk = require('@aps_sdk/model-derivative');
+const config = require('./config');
+const sdkManager = sdk.SdkManagerBuilder.create().build();
+const modelDerivativeClient = new derivativeSdk.ModelDerivativeClient(sdkManager);
+
+if (config.regions === null) {
+    config.regions = [];
+    const keys = Object.keys(derivativeSdk.Region);
+    for (let key of keys) {
+        config.regions.push(derivativeSdk.Region[key]);
+    }
+}
+
 /////////////////////////////////////////////////////////////////
 // Get the list of export file formats supported by the
 // Model Derivative API
@@ -38,10 +52,9 @@ router.get('/manifests/:urn', function (req, res) {
     var region = req.query.region;
 
 
-
-    derivatives.getManifest(req.params.urn, {}, null, req.session)
+    modelDerivativeClient.getManifest(req.params.urn, { region: region, accessToken: req.session.access_token })
         .then(function (data) {
-            res.json(data.body);
+            res.json(data);
         })
         .catch(function (error) {
             res.status(error?.response?.status || 500).end(error?.message || "Failed");
@@ -49,13 +62,10 @@ router.get('/manifests/:urn', function (req, res) {
 });
 
 router.delete('/manifests/:urn', function (req, res) {
-
-
-    var derivatives = new apsSDK.DerivativesApi();
     try {
-        derivatives.deleteManifest(req.params.urn, null, req.session)
+        modelDerivativeClient.deleteManifest(req.params.urn, { region: req.query.region, accessToken: req.session.access_token })
             .then(function (data) {
-                res.json(data.body);
+                res.json(data);
             })
             .catch(function (error) {
                 res.status(error?.response?.status || 500).end(error?.message || "Failed");
@@ -73,11 +83,11 @@ router.delete('/manifests/:urn', function (req, res) {
 router.get('/metadatas/:urn', function (req, res) {
     var derivatives = new apsSDK.DerivativesApi();
 
+    var region = req.query.region;
 
-
-    derivatives.getMetadata(req.params.urn, {}, null, req.session)
+    modelDerivativeClient.getModelViews(req.params.urn, { region: region, accessToken: req.session.access_token })
         .then(function (data) {
-            res.json(data.body);
+            res.json(data);
         })
         .catch(function (error) {
             res.status(error?.response?.status || 500).end(error?.message || "Failed");
@@ -91,10 +101,11 @@ router.get('/metadatas/:urn', function (req, res) {
 router.get('/hierarchy', function (req, res) {
     var derivatives = new apsSDK.DerivativesApi();
 
-    derivatives.getModelviewMetadata(req.query.urn, req.query.guid, {}, null, req.session)
+
+    modelDerivativeClient.getObjectTree(req.query.urn, req.query.guid, { region: req.query.region, accessToken: req.session.access_token })
         .then(function (metaData) {
-            if (metaData.body.data) {
-                res.json(metaData.body);
+            if (metaData.data) {
+                res.json(metaData);
             } else {
                 res.json({ result: 'accepted' });
             }
@@ -111,9 +122,9 @@ router.get('/hierarchy', function (req, res) {
 router.get('/properties', function (req, res) {
     var derivatives = new apsSDK.DerivativesApi();
 
-    derivatives.getModelviewProperties(req.query.urn, req.query.guid, {}, null, req.session)
+    modelDerivativeClient.getAllProperties(req.query.urn, req.query.guid, { region: req.query.region, accessToken: req.session.access_token })
         .then(function (data) {
-            res.json(data.body);
+            res.json(data);
         })
         .catch(function (error) {
             res.status(error?.response?.status || 500).end(error?.message || "Failed");
@@ -125,15 +136,9 @@ router.get('/properties', function (req, res) {
 // file format which are associated with the model file
 /////////////////////////////////////////////////////////////////
 router.get('/download', function (req, res) {
-    var derivatives = new apsSDK.DerivativesApi();
-
-    derivatives.getDerivativeManifest(req.query.urn, req.query.derUrn, {}, null, req.session)
+    modelDerivativeClient.getDerivativeUrl(req.query.derUrn, req.query.urn, { region: req.query.region, accessToken: req.session.access_token })
         .then(function (data) {
-            var fileParts = req.query.fileName.split('.')
-            var fileExt = fileParts[fileParts.length - 1];
-            res.set('content-type', 'application/octet-stream');
-            res.set('Content-Disposition', 'attachment; filename="' + req.query.fileName + '"');
-            res.end(data.body);
+            res.redirect(data.url);
         })
         .catch(function (error) {
             res.status(error?.response?.status || 500).end(error?.message || "Failed");
@@ -195,7 +200,6 @@ router.post('/export', jsonParser, function (req, res) {
 
     // Define output with destination region and formats
     const output = {
-        destination: { region },
         formats: [item]
     };
 
@@ -206,10 +210,9 @@ router.post('/export', jsonParser, function (req, res) {
         throw new Error('Failed to initialize Derivatives API');
     }
 
-
-    derivatives.translate({ "input": input, "output": output }, {}, null, req.session)
+    modelDerivativeClient.startJob({ "input": input, "output": output }, { region, accessToken: req.session.access_token })
         .then(function (data) {
-            res.json(data.body);
+            res.json(data);
         })
         .catch(function (error) {
             res.status(error?.response?.status || 500).end(error?.message || "Failed");

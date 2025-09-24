@@ -8,13 +8,15 @@
     "ejs": "^3.1.8",
     "express": "^4.16.3",
     "cookie-session": "^2.0.0",
-    "forge-apis": "^0.9.10",
+    "forge-apis": "^0.9.12",
     "formidable": "^1.2.2",
     "morgan": "^1.10.0",
     "oauth": "^0.9.14",
     "request": "^2.88.2",
     "trim": "^1.0.1",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "@aps_sdk/model-derivative": "^1.2.0",
+    "@aps_sdk/autodesk-sdkmanager": "^1.0.0"
   },
   "repository": {
     "type": "git",
