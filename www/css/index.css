@@ -62,6 +62,10 @@
 }
 #apsFormats {
     vertical-align: middle;
+    min-width: fit-content;
+}
+#derivativesRegion {
+    min-width: fit-content;
 }
 #apsUploadHidden {
     visibility: hidden;
