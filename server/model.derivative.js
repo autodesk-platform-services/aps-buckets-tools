@@ -7,8 +7,6 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json();
 
-var apsSDK = require('forge-apis');
-
 var sdk = require('@aps_sdk/autodesk-sdkmanager');
 var derivativeSdk = require('@aps_sdk/model-derivative');
 const config = require('./config');
@@ -28,11 +26,9 @@ if (config.regions === null) {
 // Model Derivative API
 /////////////////////////////////////////////////////////////////
 router.get('/formats', function (req, res) {
-    var derivatives = new apsSDK.DerivativesApi();
-
-    derivatives.getFormats({}, null, req.session)
+    modelDerivativeClient.getFormats({ accessToken: req.session.access_token })
         .then(function (formats) {
-            res.json(formats.body);
+            res.json(formats);
         })
         .catch(function (error) {
             res.status(error?.response?.status || 500).end(error?.message || "Failed");
@@ -45,8 +41,6 @@ router.get('/formats', function (req, res) {
 // available for this file
 /////////////////////////////////////////////////////////////////
 router.get('/manifests/:urn', function (req, res) {
-    var derivatives = new apsSDK.DerivativesApi();
-
     // not used yet: you can reach the manifest stored in EMEA even if you 
     // ask for it using the US endpoint 
     var region = req.query.region;
@@ -81,8 +75,6 @@ router.delete('/manifests/:urn', function (req, res) {
 // the guid of the avilable models in the file
 /////////////////////////////////////////////////////////////////
 router.get('/metadatas/:urn', function (req, res) {
-    var derivatives = new apsSDK.DerivativesApi();
-
     var region = req.query.region;
 
     modelDerivativeClient.getModelViews(req.params.urn, { region: region, accessToken: req.session.access_token })
@@ -99,9 +91,6 @@ router.get('/metadatas/:urn', function (req, res) {
 // guid inside the file with the provided urn
 /////////////////////////////////////////////////////////////////
 router.get('/hierarchy', function (req, res) {
-    var derivatives = new apsSDK.DerivativesApi();
-
-
     modelDerivativeClient.getObjectTree(req.query.urn, req.query.guid, { region: req.query.region, accessToken: req.session.access_token })
         .then(function (metaData) {
             if (metaData.data) {
@@ -120,8 +109,6 @@ router.get('/hierarchy', function (req, res) {
 // with the given guid and file urn
 /////////////////////////////////////////////////////////////////
 router.get('/properties', function (req, res) {
-    var derivatives = new apsSDK.DerivativesApi();
-
     modelDerivativeClient.getAllProperties(req.query.urn, req.query.guid, { region: req.query.region, accessToken: req.session.access_token })
         .then(function (data) {
             res.json(data);
@@ -202,13 +189,6 @@ router.post('/export', jsonParser, function (req, res) {
     const output = {
         formats: [item]
     };
-
-    // Initialize the derivatives API
-    const derivatives = new apsSDK.DerivativesApi();
-
-    if (!derivatives) {
-        throw new Error('Failed to initialize Derivatives API');
-    }
 
     modelDerivativeClient.startJob({ "input": input, "output": output }, { region, accessToken: req.session.access_token })
         .then(function (data) {
