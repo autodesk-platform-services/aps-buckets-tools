@@ -100,7 +100,7 @@ router.get('/hierarchy', function (req, res) {
             }
         })
         .catch(function (error) {
-            res.status(error.response.status || 500).end(error?.message || "Failed");
+            res.status(error?.response?.status || 500).end(error?.message || "Failed");
         });
 });
 
