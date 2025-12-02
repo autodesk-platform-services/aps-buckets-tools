@@ -1,6 +1,7 @@
 var MyVars = {
   keepTrying: true,
-  ajaxCalls: []
+  ajaxCalls: [],
+  svfType: 'svf2'
 };
 
 $(document).ready(function() {
@@ -23,7 +24,7 @@ $(document).ready(function() {
   if (url.searchParams.get("advanced.exportSettingName"))
   	MyVars.advanced.exportSettingName = url.searchParams.get("advanced.exportSettingName");
 
-  MyVars.useSvf2 = (url.searchParams.get("usesvf2") != null);
+  MyVars.svfType = (url.searchParams.get("usesvf2") === "false") ? 'svf' : 'svf2';
   MyVars.uploadInParallel = (url.searchParams.get("uploadinparallel") != null);
 
   $("#createBucket").click(function(evt) {
@@ -1196,7 +1197,7 @@ function showHierarchy(urn, guid, objectIds, rootFileName, fileExtType) {
 
   // Get svf export in order to get hierarchy and properties
   // for the model
-  var format = MyVars.useSvf2 ? "svf2" : "svf";
+  var format = MyVars.svfType;
   askForFileType(
     format,
     urn,
