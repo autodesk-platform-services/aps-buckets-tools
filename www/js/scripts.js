@@ -24,7 +24,7 @@ $(document).ready(function() {
   if (url.searchParams.get("advanced.exportSettingName"))
   	MyVars.advanced.exportSettingName = url.searchParams.get("advanced.exportSettingName");
 
-  MyVars.svfType = (url.searchParams.get("usesvf2") === "false") ? 'svf' : 'svf2';
+  MyVars.svfType = (url.searchParams.get("usesvf2") === "true") ? 'svf2' : 'svf';
   MyVars.uploadInParallel = (url.searchParams.get("uploadinparallel") != null);
 
   $("#createBucket").click(function(evt) {
