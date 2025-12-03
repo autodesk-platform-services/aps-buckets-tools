@@ -1125,7 +1125,7 @@ function getPublicUrl(id) {
     })
       .done(function(data) {
         console.log(data);
-        alert(data.signedUrl);
+        navigator.clipboard.writeText(data.signedUrl);
       })
       .fail(function(err) {
         console.log("DELETE /dm/buckets/ call failed\n" + err.statusText);
@@ -1173,7 +1173,7 @@ function filesTreeContextMenu(node, callback) {
         }
       },
       publicUrl: {
-        label: "Public URL",
+        label: "Copy public URL to clipboard",
         action: function(obj) {
           getPublicUrl(MyVars.selectedNode.id);
         }
