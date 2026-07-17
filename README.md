@@ -20,6 +20,11 @@ This utility app lets you to see and create new buckets on **OSS**, upload and d
 
 [https://oss-manager.autodesk.io](https://oss-manager.autodesk.io)
 
+### Desktop alternative
+
+A great alternative that runs directly on the desktop is our **VS Code Extension** which provides similar capabilities: 
+https://marketplace.visualstudio.com/items?itemName=petrbroz.vscode-forge-tools
+
 # Usage 
 
 1. **On the top** you can provide your **app**'s **Client Id** and **Client Secret** to use for authentication\
